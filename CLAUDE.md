@@ -21,6 +21,13 @@ bun run dev
 # Install dependencies
 bun install
 
+# Testing commands
+bun test                      # Run all tests
+bun test:watch               # Run tests in watch mode
+bun test:coverage            # Run tests with coverage report
+bun test:unit                # Run unit tests only
+bun test:integration         # Run integration tests only
+
 # Database commands
 bunx prisma migrate dev        # Create and apply migrations
 bunx prisma generate          # Generate Prisma client
@@ -76,6 +83,33 @@ src/
 │   └── note.service.ts    # Note CRUD operations with ownership checks
 └── utils/
     └── password.ts        # Password hashing with Argon2id
+
+test/
+├── setup.ts               # Global test setup and environment config
+├── helpers/               # Test utilities and helper functions
+│   ├── app.ts            # Test app instance without rate limiting
+│   ├── cookies.ts        # Cookie parsing and manipulation
+│   ├── mock-prisma.ts    # Prisma mocking utilities
+│   └── request.ts        # HTTP request helpers
+├── fixtures/              # Test data and mock objects
+│   ├── users.ts          # User test fixtures
+│   ├── notes.ts          # Note test fixtures
+│   └── sessions.ts       # Session test fixtures
+├── unit/                  # Unit tests (46 tests)
+│   ├── utils/
+│   │   └── password.test.ts
+│   └── services/
+│       ├── auth.service.test.ts
+│       ├── session.service.test.ts
+│       └── note.service.test.ts
+└── integration/           # Integration tests (52 tests)
+    ├── auth/
+    │   ├── register.test.ts
+    │   └── complete-auth-flow.test.ts
+    ├── notes/
+    │   └── notes-crud.test.ts
+    └── security/
+        └── security.test.ts
 ```
 
 ## Architecture
@@ -142,6 +176,73 @@ Services contain business logic and database operations:
 - `GET /` - Welcome message
 - `GET /health` - Health check
 
+## Testing
+
+### Test Suite Overview
+
+The project uses **Bun's built-in test runner** with **mock-based testing** for fast, isolated tests without requiring a database.
+
+**Test Coverage**: 98 tests, 88% line coverage, 84% function coverage
+
+**Test Categories**:
+- **Unit Tests (46)**: Services, utils, password hashing with full coverage
+- **Integration Tests (52)**: Auth routes, notes CRUD, security, error handling
+
+### Running Tests
+
+```bash
+bun test                    # Run all tests (fast, ~500ms)
+bun test:watch             # Watch mode for development
+bun test:coverage          # Generate coverage report
+bun test:unit              # Run only unit tests
+bun test:integration       # Run only integration tests
+
+# Run specific test file
+bun test test/unit/services/auth.service.test.ts
+
+# Run tests matching pattern
+bun test --test-name-pattern "should create"
+```
+
+### Testing Architecture
+
+**Mock-Based Approach**: All tests use `prisma-mock` to mock database operations, eliminating the need for a test database and ensuring fast, isolated tests.
+
+**Test Helpers**:
+- `test/helpers/app.ts`: Creates test Elysia app instance without rate limiting
+- `test/helpers/request.ts`: HTTP request builders with cookie support
+- `test/helpers/cookies.ts`: Cookie parsing and session ID extraction
+- `test/helpers/mock-prisma.ts`: Prisma client mocking utilities
+
+**Test Fixtures**: Reusable test data in `test/fixtures/` for users, notes, and sessions
+
+**Testing Pattern**:
+```typescript
+// Unit test example
+import { mock } from 'bun:test'
+const mockPrisma = { user: { create: mock() } }
+mock.module('../../src/db', () => ({ prisma: mockPrisma }))
+
+// Integration test example
+const app = createTestApp()
+const response = await app.handle(createJsonRequest(...))
+```
+
+### Test Coverage Requirements
+
+- **Core Services**: 100% coverage (auth, session, note services)
+- **Routes & Handlers**: 100% coverage
+- **Password Utils**: 100% coverage
+- **Overall Target**: >90% line coverage
+
+### Writing New Tests
+
+1. **Unit Tests**: Test service methods in isolation with mocked Prisma
+2. **Integration Tests**: Test HTTP endpoints with `app.handle()` and mocked database
+3. **Use Fixtures**: Import test data from `test/fixtures/` for consistency
+4. **Mock Prisma**: Always mock database calls using `prisma-mock` or `mock.module()`
+5. **Test IDs**: Include TC-XXX-NNN IDs matching test-cases.md for traceability
+
 ## Key Conventions
 
 - **Service classes**: Use static methods for stateless operations
@@ -152,3 +253,4 @@ Services contain business logic and database operations:
 - **Session management**: Always validate session expiration before use
 - **API Documentation**: All routes must include `detail` with tags, summary, description, and response codes
 - **Schema Documentation**: All TypeBox schemas should include descriptions and examples for better Swagger docs
+- **Testing**: Write tests for all new features; use mock-based approach with prisma-mock
