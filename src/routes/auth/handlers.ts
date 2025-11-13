@@ -51,8 +51,13 @@ export const authHandlers = {
     return { message: "Logged out successfully" };
   },
 
-  async me({ user }: any) {
-    const { password, ...userWithoutPassword } = user;
+  async me({ user, set }: any) {
+    if (!user) {
+      set.status = 401;
+      throw new Error("Unauthorized");
+    }
+
+    const { password: _pw, ...userWithoutPassword } = user;
     return { user: userWithoutPassword };
   },
 };
