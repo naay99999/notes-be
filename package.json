@@ -2,7 +2,11 @@
   "name": "notes-be",
   "version": "1.0.50",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "test:coverage": "bun test --coverage",
+    "test:unit": "bun test test/unit",
+    "test:integration": "bun test test/integration",
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
@@ -14,8 +18,10 @@
     "elysia-rate-limit": "^4.4.2"
   },
   "devDependencies": {
+    "@elysiajs/eden": "^1.4.5",
     "bun-types": "latest",
-    "prisma": "^6.19.0"
+    "prisma": "^6.19.0",
+    "prisma-mock": "^1.0.0"
   },
   "module": "src/index.js"
 }

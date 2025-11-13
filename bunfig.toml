@@ -1,0 +1,18 @@
+[test]
+# Test file patterns
+testPath = ["test/**/*.test.ts", "test/**/*.spec.ts"]
+
+# Coverage configuration
+coverage = true
+coverageThreshold = 90
+coverageSkipTestFiles = true
+
+# Coverage exclusions
+coverageExclude = [
+  "node_modules/**",
+  "test/**",
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "src/db/index.ts",
+  "src/config/env.ts"
+]
