@@ -1,51 +1,51 @@
 # Notes API
 
-> **⚠️ AI-Generated Project Notice**
+> **⚠️ ประกาศโปรเจ็คที่สร้างโดย AI**
 >
-> This project was entirely generated and developed by **Claude AI** (claude.ai/code) as an experimental demonstration of AI-assisted software development. The entire codebase, including architecture design, implementation, testing suite, and documentation, was created through AI assistance.
+> โปรเจ็คนี้ถูกสร้างและพัฒนาทั้งหมดโดย **Claude AI** (claude.ai/code) เพื่อเป็นการทดลองแสดงให้เห็นถึงการพัฒนาซอฟต์แวร์ด้วยความช่วยเหลือจาก AI โค้ดทั้งหมด รวมถึงการออกแบบสถาปัตยกรรม การเขียนโค้ด การทดสอบ และเอกสาร ถูกสร้างผ่านความช่วยเหลือของ AI
 
-A secure, type-safe REST API for managing notes with user authentication. Built with Bun, Elysia, and PostgreSQL.
+REST API ที่ปลอดภัยและมีความชัดเจนของ type สำหรับจัดการบันทึกย่อพร้อมระบบยืนยันตัวตนผู้ใช้ สร้างด้วย Bun, Elysia และ PostgreSQL
 
-## Features
+## ฟีเจอร์หลัก
 
-- **User Authentication**: Session-based authentication with secure cookies
-- **Notes Management**: Full CRUD operations for personal notes
-- **Type Safety**: End-to-end type safety with TypeScript and TypeBox
-- **API Documentation**: Interactive Swagger UI for testing endpoints
-- **Security**: Rate limiting, CORS, secure headers, and Argon2id password hashing
-- **Database**: PostgreSQL with Prisma ORM
+- **ระบบยืนยันตัวตน**: Session-based authentication พร้อม secure cookies
+- **จัดการบันทึกย่อ**: CRUD operations แบบเต็มรูปแบบสำหรับบันทึกส่วนตัว
+- **ความปลอดภัยของ Type**: Type safety แบบ end-to-end ด้วย TypeScript และ TypeBox
+- **เอกสาร API**: Swagger UI แบบ interactive สำหรับทดสอบ endpoints
+- **ความปลอดภัย**: Rate limiting, CORS, secure headers และ Argon2id password hashing
+- **ฐานข้อมูล**: PostgreSQL พร้อม Prisma ORM
 
-## Tech Stack
+## เทคโนโลยีที่ใช้
 
 - **Runtime**: Bun
-- **Framework**: Elysia (fast, type-safe web framework)
+- **Framework**: Elysia (web framework ที่รวดเร็วและมี type safety)
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: Session-based with secure cookies
 - **API Documentation**: Swagger/OpenAPI 3.0
 - **Language**: TypeScript with strict mode
 
-## Prerequisites
+## ความต้องการเบื้องต้น
 
-- [Bun](https://bun.sh) (v1.0 or higher)
-- PostgreSQL (v14 or higher)
+- [Bun](https://bun.sh) (v1.0 หรือสูงกว่า)
+- PostgreSQL (v14 หรือสูงกว่า)
 
-## Getting Started
+## เริ่มต้นใช้งาน
 
-### 1. Install Dependencies
+### 1. ติดตั้ง Dependencies
 
 ```bash
 bun install
 ```
 
-### 2. Environment Setup
+### 2. ตั้งค่า Environment
 
-Copy the example environment file and configure it:
+คัดลอกไฟล์ตัวอย่างและปรับแต่งการตั้งค่า:
 
 ```bash
 cp .env.example .env
 ```
 
-Update `.env` with your configuration:
+อัปเดตไฟล์ `.env` ด้วยการตั้งค่าของคุณ:
 
 ```env
 # Database
@@ -55,90 +55,90 @@ DATABASE_URL="postgresql://username:password@localhost:5432/notes_db?schema=publ
 PORT=3000
 NODE_ENV=development
 
-# Session (generate a secure random string, minimum 32 characters)
+# Session (สร้าง random string ที่ปลอดภัย อย่างน้อย 32 ตัวอักษร)
 SESSION_SECRET="your-secure-random-string-here"
 SESSION_MAX_AGE=604800000
 
-# Frontend (for CORS)
+# Frontend (สำหรับ CORS)
 FRONTEND_URL="http://localhost:5173"
 ```
 
-**Generate a secure SESSION_SECRET**:
+**สร้าง SESSION_SECRET ที่ปลอดภัย**:
 ```bash
 openssl rand -base64 48
 ```
 
-### 3. Database Setup
+### 3. ตั้งค่าฐานข้อมูล
 
-Create and apply database migrations:
+สร้างและ apply database migrations:
 
 ```bash
-# Generate Prisma client
+# สร้าง Prisma client
 bunx prisma generate
 
-# Create and apply migrations
+# สร้างและ apply migrations
 bunx prisma migrate dev --name init
 ```
 
-### 4. Start Development Server
+### 4. เริ่มต้น Development Server
 
 ```bash
 bun run dev
 ```
 
-The server will start at `http://localhost:3000` with hot reload enabled.
+เซิร์ฟเวอร์จะเริ่มที่ `http://localhost:3000` พร้อม hot reload
 
-## API Documentation
+## เอกสาร API
 
 ### Swagger UI
 
-Access the interactive API documentation at:
+เข้าถึงเอกสาร API แบบ interactive ที่:
 
 **🚀 [http://localhost:3000/swagger](http://localhost:3000/swagger)**
 
-The Swagger UI provides:
-- Complete list of all endpoints with descriptions
-- Request/response schemas with examples
-- Authentication requirements
-- Try-it-out functionality to test endpoints directly
-- Response status codes and error messages
+Swagger UI มีให้:
+- รายการ endpoints ทั้งหมดพร้อมคำอธิบาย
+- Request/response schemas พร้อมตัวอย่าง
+- ความต้องการในการยืนยันตัวตน
+- ฟังก์ชัน Try-it-out เพื่อทดสอบ endpoints โดยตรง
+- Response status codes และข้อความ error
 
 ### OpenAPI JSON
 
-The raw OpenAPI specification is available at:
+OpenAPI specification แบบดิบอยู่ที่:
 - [http://localhost:3000/swagger/json](http://localhost:3000/swagger/json)
 
 ## API Endpoints
 
-### Authentication
+### การยืนยันตัวตน (Authentication)
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `POST` | `/api/auth/register` | Register a new user | No |
-| `POST` | `/api/auth/login` | Login user | No |
-| `POST` | `/api/auth/logout` | Logout user | Yes |
-| `GET` | `/api/auth/me` | Get current user | Yes |
+| Method | Endpoint | คำอธิบาย | ต้องยืนยันตัวตน |
+|--------|----------|----------|-----------------|
+| `POST` | `/api/auth/register` | ลงทะเบียนผู้ใช้ใหม่ | ไม่ |
+| `POST` | `/api/auth/login` | เข้าสู่ระบบ | ไม่ |
+| `POST` | `/api/auth/logout` | ออกจากระบบ | ใช่ |
+| `GET` | `/api/auth/me` | ดูข้อมูลผู้ใช้ปัจจุบัน | ใช่ |
 
-### Notes
+### บันทึกย่อ (Notes)
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `POST` | `/api/notes` | Create a new note | Yes |
-| `GET` | `/api/notes` | Get all user's notes | Yes |
-| `GET` | `/api/notes/:id` | Get specific note | Yes |
-| `PATCH` | `/api/notes/:id` | Update note | Yes |
-| `DELETE` | `/api/notes/:id` | Delete note | Yes |
+| Method | Endpoint | คำอธิบาย | ต้องยืนยันตัวตน |
+|--------|----------|----------|-----------------|
+| `POST` | `/api/notes` | สร้างบันทึกใหม่ | ใช่ |
+| `GET` | `/api/notes` | ดูบันทึกทั้งหมดของผู้ใช้ | ใช่ |
+| `GET` | `/api/notes/:id` | ดูบันทึกเฉพาะ | ใช่ |
+| `PATCH` | `/api/notes/:id` | แก้ไขบันทึก | ใช่ |
+| `DELETE` | `/api/notes/:id` | ลบบันทึก | ใช่ |
 
-### System
+### ระบบ (System)
 
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `GET` | `/` | Welcome message | No |
-| `GET` | `/health` | Health check | No |
+| Method | Endpoint | คำอธิบาย | ต้องยืนยันตัวตน |
+|--------|----------|----------|-----------------|
+| `GET` | `/` | ข้อความต้อนรับ | ไม่ |
+| `GET` | `/health` | ตรวจสอบสุขภาพระบบ | ไม่ |
 
-## Example Usage
+## ตัวอย่างการใช้งาน
 
-### Register a User
+### ลงทะเบียนผู้ใช้
 
 ```bash
 curl -X POST http://localhost:3000/api/auth/register \
@@ -150,7 +150,7 @@ curl -X POST http://localhost:3000/api/auth/register \
   }'
 ```
 
-### Login
+### เข้าสู่ระบบ
 
 ```bash
 curl -X POST http://localhost:3000/api/auth/login \
@@ -162,84 +162,84 @@ curl -X POST http://localhost:3000/api/auth/login \
   }'
 ```
 
-### Create a Note
+### สร้างบันทึกย่อ
 
 ```bash
 curl -X POST http://localhost:3000/api/notes \
   -H "Content-Type: application/json" \
   -b cookies.txt \
   -d '{
-    "title": "My First Note",
-    "content": "This is the content of my note"
+    "title": "บันทึกแรกของฉัน",
+    "content": "นี่คือเนื้อหาของบันทึกฉัน"
   }'
 ```
 
-### Get All Notes
+### ดูบันทึกทั้งหมด
 
 ```bash
 curl -X GET http://localhost:3000/api/notes \
   -b cookies.txt
 ```
 
-## Development Commands
+## คำสั่งสำหรับการพัฒนา
 
 ```bash
-# Start development server with hot reload
+# เริ่ม development server พร้อม hot reload
 bun run dev
 
-# Install dependencies
+# ติดตั้ง dependencies
 bun install
 
-# Database commands
-bunx prisma migrate dev        # Create and apply migrations
-bunx prisma generate          # Generate Prisma client
-bunx prisma studio            # Open Prisma Studio (database GUI)
-bunx prisma db push           # Push schema changes without migrations
+# คำสั่งฐานข้อมูล
+bunx prisma migrate dev        # สร้างและ apply migrations
+bunx prisma generate          # สร้าง Prisma client
+bunx prisma studio            # เปิด Prisma Studio (database GUI)
+bunx prisma db push           # Push schema changes โดยไม่ใช้ migrations
 
-# View database in GUI
+# ดูฐานข้อมูลใน GUI
 bunx prisma studio
 ```
 
-## Project Structure
+## โครงสร้างโปรเจ็ค
 
 ```
 src/
-├── index.ts                 # Main app with middleware and route setup
-├── config/env.ts           # Environment configuration and validation
+├── index.ts                 # แอปหลักพร้อม middleware และการตั้งค่า routes
+├── config/env.ts           # การตั้งค่า environment และการตรวจสอบ
 ├── db/index.ts             # Prisma client singleton
 ├── middleware/
 │   ├── auth.ts            # Authentication middleware
 │   └── error.ts           # Global error handler
 ├── routes/
 │   ├── auth/              # Authentication routes
-│   │   ├── index.ts       # Route definitions
+│   │   ├── index.ts       # การกำหนด routes
 │   │   ├── handlers.ts    # Route handlers
 │   │   └── validators.ts  # Validation schemas
 │   └── notes/             # Notes CRUD routes
-│       ├── index.ts       # Route definitions
+│       ├── index.ts       # การกำหนด routes
 │       ├── handlers.ts    # Route handlers
 │       └── validators.ts  # Validation schemas
 ├── services/
-│   ├── auth.service.ts    # User registration and login
-│   ├── session.service.ts # Session management
+│   ├── auth.service.ts    # การลงทะเบียนและเข้าสู่ระบบ
+│   ├── session.service.ts # การจัดการ session
 │   └── note.service.ts    # Note CRUD operations
 └── utils/
-    └── password.ts        # Password hashing utilities
+    └── password.ts        # ยูทิลิตี้สำหรับ password hashing
 ```
 
-## Security Features
+## ฟีเจอร์ด้านความปลอดภัย
 
-- **Password Security**: Argon2id hashing via Bun's native crypto
-- **Session Management**: Secure httpOnly cookies with 7-day expiration
-- **CSRF Protection**: SameSite cookies prevent CSRF attacks
-- **Rate Limiting**: 100 requests per minute per IP
-- **Security Headers**: Helmet plugin for secure HTTP headers
-- **Input Validation**: TypeBox schemas validate all inputs
-- **CORS**: Restricted to configured frontend URL
+- **ความปลอดภัยของรหัสผ่าน**: Argon2id hashing ผ่าน Bun's native crypto
+- **การจัดการ Session**: Secure httpOnly cookies หมดอายุภายใน 7 วัน
+- **ป้องกัน CSRF**: SameSite cookies ป้องกันการโจมตี CSRF
+- **Rate Limiting**: จำกัด 100 requests ต่อนาทีต่อ IP
+- **Security Headers**: Helmet plugin สำหรับ secure HTTP headers
+- **การตรวจสอบข้อมูลนำเข้า**: TypeBox schemas ตรวจสอบข้อมูลทั้งหมด
+- **CORS**: จำกัดเฉพาะ frontend URL ที่ตั้งค่าไว้
 
 ## Database Models
 
-### User
+### User (ผู้ใช้)
 - `id`: UUID (primary key)
 - `email`: String (unique)
 - `password`: String (hashed)
@@ -247,7 +247,7 @@ src/
 - `createdAt`: DateTime
 - `updatedAt`: DateTime
 
-### Note
+### Note (บันทึก)
 - `id`: UUID (primary key)
 - `title`: String
 - `content`: String
@@ -261,58 +261,58 @@ src/
 - `expiresAt`: DateTime
 - `createdAt`: DateTime
 
-## Troubleshooting
+## การแก้ปัญหา
 
-### Prisma Client Not Generated
+### Prisma Client ไม่ถูกสร้าง
 
 ```bash
 bunx prisma generate
 ```
 
-### Database Connection Issues
+### ปัญหาการเชื่อมต่อฐานข้อมูล
 
-- Ensure PostgreSQL is running
-- Verify DATABASE_URL credentials in `.env`
-- Check if the database exists
+- ตรวจสอบว่า PostgreSQL กำลังทำงานอยู่
+- ตรวจสอบข้อมูลการเข้าถึง DATABASE_URL ในไฟล์ `.env`
+- ตรวจสอบว่าฐานข้อมูลมีอยู่จริง
 
-### Port Already in Use
+### Port ถูกใช้งานอยู่แล้ว
 
-Change the `PORT` in `.env` or stop the process using port 3000:
+เปลี่ยน `PORT` ในไฟล์ `.env` หรือหยุด process ที่ใช้ port 3000:
 
 ```bash
 lsof -ti:3000 | xargs kill -9
 ```
 
-## Testing
+## การทดสอบ (Testing)
 
-This project includes a comprehensive test suite with 98 tests achieving 88% code coverage.
+โปรเจ็คนี้มีชุดทดสอบที่ครอบคลุม 98 tests บรรลุ 88% code coverage
 
 ```bash
-# Run all tests
+# รันทดสอบทั้งหมด
 bun test
 
-# Run tests in watch mode
+# รันทดสอบในโหมด watch
 bun test:watch
 
-# Run tests with coverage report
+# รันทดสอบพร้อมรายงาน coverage
 bun test:coverage
 
-# Run only unit tests
+# รันเฉพาะ unit tests
 bun test:unit
 
-# Run only integration tests
+# รันเฉพาะ integration tests
 bun test:integration
 ```
 
 **Test Coverage**:
 - Unit tests (46): Services, utils, password hashing
 - Integration tests (52): Auth routes, notes CRUD, security, error handling
-- Mock-based testing using `prisma-mock` for fast, isolated tests
+- Mock-based testing ใช้ `prisma-mock` สำหรับการทดสอบที่รวดเร็วและแยกส่วน
 
-## License
+## สัญญาอนุญาต (License)
 
-This project is free and open source, available for anyone to use, modify, and distribute.
+โปรเจ็คนี้เป็นซอฟต์แวร์โอเพนซอร์สและฟรี ทุกคนสามารถใช้ แก้ไข และเผยแพร่ได้อย่างอิสระ
 
-**UNLICENSE** - This is free and unencumbered software released into the public domain.
+**UNLICENSE** - ซอฟต์แวร์นี้เป็นของสาธารณะ (public domain)
 
-Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
+ทุกคนสามารถคัดลอก แก้ไข เผยแพร่ ใช้งาน คอมไพล์ ขาย หรือแจกจ่ายซอฟต์แวร์นี้ได้ ไม่ว่าจะเป็นรูปแบบ source code หรือ compiled binary สำหรับวัตถุประสงค์ใดก็ตาม ทั้งเชิงพาณิชย์และไม่ใช่เชิงพาณิชย์ โดยวิธีการใดก็ได้
