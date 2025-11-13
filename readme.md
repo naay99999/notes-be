@@ -1,5 +1,9 @@
 # Notes API
 
+> **⚠️ AI-Generated Project Notice**
+>
+> This project was entirely generated and developed by **Claude AI** (claude.ai/code) as an experimental demonstration of AI-assisted software development. The entire codebase, including architecture design, implementation, testing suite, and documentation, was created through AI assistance.
+
 A secure, type-safe REST API for managing notes with user authentication. Built with Bun, Elysia, and PostgreSQL.
 
 ## Features
@@ -279,6 +283,36 @@ Change the `PORT` in `.env` or stop the process using port 3000:
 lsof -ti:3000 | xargs kill -9
 ```
 
+## Testing
+
+This project includes a comprehensive test suite with 98 tests achieving 88% code coverage.
+
+```bash
+# Run all tests
+bun test
+
+# Run tests in watch mode
+bun test:watch
+
+# Run tests with coverage report
+bun test:coverage
+
+# Run only unit tests
+bun test:unit
+
+# Run only integration tests
+bun test:integration
+```
+
+**Test Coverage**:
+- Unit tests (46): Services, utils, password hashing
+- Integration tests (52): Auth routes, notes CRUD, security, error handling
+- Mock-based testing using `prisma-mock` for fast, isolated tests
+
 ## License
 
-MIT
+This project is free and open source, available for anyone to use, modify, and distribute.
+
+**UNLICENSE** - This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
