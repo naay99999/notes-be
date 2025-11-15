@@ -10,11 +10,17 @@ export const authHandlers = {
     const sessionIdValue = await SessionService.createSession(user.id);
 
     // Set cookie
+    const frontend = new URL(config.frontendUrl);
+    const apiOrigin = `http://localhost:${config.port}`;
+    const isCrossSite = frontend.origin !== apiOrigin;
+
     sessionId.set({
       value: sessionIdValue,
       httpOnly: true,
-      secure: config.nodeEnv === "production",
-      sameSite: "lax" as const,
+      // Use secure cookies in production and when cross-site to satisfy SameSite=None requirements
+      secure: config.nodeEnv === "production" || isCrossSite,
+      // Allow cross-site requests from a separate frontend origin during development
+      sameSite: isCrossSite ? ("none" as const) : ("lax" as const),
       maxAge: config.sessionMaxAge / 1000, // Convert to seconds
       path: "/",
     });
@@ -23,18 +29,22 @@ export const authHandlers = {
     return { user };
   },
 
-  async login({ body, cookie: { sessionId }, set }: any) {
+  async login({ body, cookie: { sessionId } }: any) {
     const user = await AuthService.login(body.email, body.password);
 
     // Create session
     const sessionIdValue = await SessionService.createSession(user.id);
 
     // Set cookie
+    const frontend = new URL(config.frontendUrl);
+    const apiOrigin = `http://localhost:${config.port}`;
+    const isCrossSite = frontend.origin !== apiOrigin;
+
     sessionId.set({
       value: sessionIdValue,
       httpOnly: true,
-      secure: config.nodeEnv === "production",
-      sameSite: "lax" as const,
+      secure: config.nodeEnv === "production" || isCrossSite,
+      sameSite: isCrossSite ? ("none" as const) : ("lax" as const),
       maxAge: config.sessionMaxAge / 1000,
       path: "/",
     });
@@ -51,12 +61,7 @@ export const authHandlers = {
     return { message: "Logged out successfully" };
   },
 
-  async me({ user, set }: any) {
-    if (!user) {
-      set.status = 401;
-      throw new Error("Unauthorized");
-    }
-
+  async me({ user }: any) {
     const { password: _pw, ...userWithoutPassword } = user;
     return { user: userWithoutPassword };
   },

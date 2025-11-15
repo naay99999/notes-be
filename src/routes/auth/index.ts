@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 import { authHandlers } from "./handlers";
 import { registerSchema, loginSchema } from "./validators";
-import { authMiddleware } from "../../middleware/auth";
+import { SessionService } from "../../services/session.service";
 
 export const authRoutes = new Elysia({ prefix: "/auth" })
   .post("/register", authHandlers.register, {
@@ -50,7 +50,24 @@ export const authRoutes = new Elysia({ prefix: "/auth" })
       },
     },
   })
-  .use(authMiddleware)
+  .derive(async ({ cookie: { sessionId }, set }) => {
+    if (!sessionId?.value) {
+      set.status = 401;
+      throw new Error("Unauthorized");
+    }
+
+    const result = await SessionService.validateSession(sessionId.value);
+
+    if (!result) {
+      set.status = 401;
+      throw new Error("Unauthorized");
+    }
+
+    return {
+      user: result.user,
+      session: result.session,
+    };
+  })
   .get("/me", authHandlers.me, {
     detail: {
       tags: ["Authentication"],

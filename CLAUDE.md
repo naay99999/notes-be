@@ -66,7 +66,6 @@ src/
 ├── config/env.ts           # Environment configuration and validation
 ├── db/index.ts             # Prisma client singleton
 ├── middleware/
-│   ├── auth.ts            # Authentication middleware (session validation)
 │   └── error.ts           # Global error handler
 ├── routes/
 │   ├── auth/              # Authentication routes (register, login, logout, me)
@@ -128,9 +127,35 @@ test/
 **Note**: `id`, `title`, `content`, `userId` (foreign key), `createdAt`, `updatedAt`
 **Session**: `id`, `userId` (foreign key), `expiresAt`, `createdAt`
 
-### Middleware Pattern
+### Authentication Pattern
 
-- **authMiddleware**: Uses Elysia's `.derive()` to validate session and inject `user` object into route context
+Authentication is implemented using Elysia's `.derive()` method directly in route files:
+- Each protected route group (auth, notes) uses `.derive()` to validate session cookies
+- The derivation validates `sessionId` cookie and injects `user` and `session` objects into context
+- This approach ensures context is properly propagated to all route handlers
+
+**Important**: Do NOT use `.use(createAuthMiddleware())` pattern - it causes context propagation issues in Elysia. Always use `.derive()` directly in the route file before defining protected routes.
+
+Example:
+```typescript
+export const noteRoutes = new Elysia({ prefix: "/notes" })
+  .derive(async ({ cookie: { sessionId }, set }) => {
+    if (!sessionId?.value) {
+      set.status = 401;
+      throw new Error("Unauthorized");
+    }
+    const result = await SessionService.validateSession(sessionId.value);
+    if (!result) {
+      set.status = 401;
+      throw new Error("Unauthorized");
+    }
+    return { user: result.user, session: result.session };
+  })
+  .get("/", handler) // now has access to user and session
+```
+
+### Other Middleware
+
 - **errorHandler**: Global error handler with custom error messages and status codes
 - **Security plugins**: CORS, Helmet (security headers), Rate limiting (100 req/min)
 

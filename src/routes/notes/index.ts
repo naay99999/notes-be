@@ -5,10 +5,27 @@ import {
   updateNoteSchema,
   noteParamsSchema,
 } from "./validators";
-import { authMiddleware } from "../../middleware/auth";
+import { SessionService } from "../../services/session.service";
 
 export const noteRoutes = new Elysia({ prefix: "/notes" })
-  .use(authMiddleware)
+  .derive(async ({ cookie: { sessionId }, set }) => {
+    if (!sessionId?.value) {
+      set.status = 401;
+      throw new Error("Unauthorized");
+    }
+
+    const result = await SessionService.validateSession(sessionId.value);
+
+    if (!result) {
+      set.status = 401;
+      throw new Error("Unauthorized");
+    }
+
+    return {
+      user: result.user,
+      session: result.session,
+    };
+  })
   .post("/", noteHandlers.create, {
     body: createNoteSchema,
     detail: {
