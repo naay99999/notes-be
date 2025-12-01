@@ -176,5 +176,30 @@ describe('SessionService', () => {
         Date.now()
       )
     })
+
+    it('TC-EDGE-001: should handle database errors gracefully during session creation', async () => {
+      mockPrisma.session.create.mockRejectedValue(new Error('Database connection failed'))
+
+      await expect(
+        SessionService.createSession(mockUserInDb.id)
+      ).rejects.toThrow('Database connection failed')
+    })
+
+    it('TC-EDGE-002: should handle database errors gracefully during session validation', async () => {
+      mockPrisma.session.findUnique.mockRejectedValue(new Error('Database connection failed'))
+
+      await expect(
+        SessionService.validateSession(mockSession.id)
+      ).rejects.toThrow('Database connection failed')
+    })
+
+    it('TC-EDGE-003: should handle database errors gracefully during session cleanup', async () => {
+      mockPrisma.session.deleteMany.mockRejectedValue(new Error('Database connection failed'))
+
+      // Should throw error when database cleanup fails
+      await expect(
+        SessionService.cleanupExpiredSessions()
+      ).rejects.toThrow('Database connection failed')
+    })
   })
 })

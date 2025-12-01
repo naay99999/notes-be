@@ -223,5 +223,22 @@ describe('AuthService', () => {
 
       throw new Error('Expected errors to be thrown')
     })
+
+    it('TC-EDGE-001: should handle database errors gracefully during registration', async () => {
+      mockPrisma.user.findUnique.mockResolvedValue(null)
+      mockPrisma.user.create.mockRejectedValue(new Error('Database connection failed'))
+
+      await expect(
+        AuthService.register(testUsers.validUser.email, testUsers.validUser.password, testUsers.validUser.name)
+      ).rejects.toThrow('Database connection failed')
+    })
+
+    it('TC-EDGE-002: should handle database errors gracefully during login', async () => {
+      mockPrisma.user.findUnique.mockRejectedValue(new Error('Database connection failed'))
+
+      await expect(
+        AuthService.login(testUsers.validUser.email, testUsers.validUser.password)
+      ).rejects.toThrow('Database connection failed')
+    })
   })
 })

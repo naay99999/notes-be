@@ -262,5 +262,22 @@ describe('NoteService', () => {
         NoteService.deleteNote('non-existent-id', mockUserInDb.id)
       ).rejects.toThrow('Note not found')
     })
+
+    it('TC-EDGE-007: should handle database errors gracefully during note creation', async () => {
+      mockPrisma.note.create.mockRejectedValue(new Error('Database connection failed'))
+
+      await expect(
+        NoteService.createNote(mockUserInDb.id, testNotes.validNote.title, testNotes.validNote.content)
+      ).rejects.toThrow('Database connection failed')
+    })
+
+    it('TC-EDGE-008: should handle database errors gracefully during note update', async () => {
+      mockPrisma.note.findFirst.mockResolvedValue(mockNoteInDb)
+      mockPrisma.note.update.mockRejectedValue(new Error('Database connection failed'))
+
+      await expect(
+        NoteService.updateNote(mockNoteInDb.id, mockUserInDb.id, { title: 'Updated' })
+      ).rejects.toThrow('Database connection failed')
+    })
   })
 })

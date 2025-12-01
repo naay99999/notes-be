@@ -1,6 +1,9 @@
 import { Elysia } from "elysia";
 import { authHandlers } from "./handlers";
-import { registerSchema, loginSchema } from "./validators";
+import {
+  registerSchema,
+  loginSchema
+} from "./validators";
 import { SessionService } from "../../services/session.service";
 
 export const authRoutes = new Elysia({ prefix: "/auth" })
@@ -14,6 +17,9 @@ export const authRoutes = new Elysia({ prefix: "/auth" })
       responses: {
         201: {
           description: "User successfully registered",
+        },
+        400: {
+          description: "Validation error - invalid input",
         },
         409: {
           description: "User already exists",
@@ -34,6 +40,9 @@ export const authRoutes = new Elysia({ prefix: "/auth" })
         },
         401: {
           description: "Invalid credentials",
+        },
+        400: {
+          description: "Validation error - invalid input",
         },
       },
     },

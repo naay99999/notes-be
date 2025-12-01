@@ -1,9 +1,23 @@
 import { AuthService } from "../../services/auth.service";
 import { SessionService } from "../../services/session.service";
 import { config } from "../../config/env";
+import type {
+  User,
+  AuthenticatedContext,
+  AuthResponse,
+  AuthenticatedUser
+} from "../../types";
 
 export const authHandlers = {
-  async register({ body, cookie: { sessionId }, set }: any) {
+  async register({
+    body,
+    cookie: { sessionId },
+    set
+  }: {
+    body: { email: string; password: string; name?: string };
+    cookie: { sessionId: { set: (options: any) => void } };
+    set: { status: (code: number) => void };
+  }): Promise<AuthResponse> {
     const user = await AuthService.register(body.email, body.password, body.name);
 
     // Create session
@@ -29,7 +43,13 @@ export const authHandlers = {
     return { user };
   },
 
-  async login({ body, cookie: { sessionId } }: any) {
+  async login({
+    body,
+    cookie: { sessionId }
+  }: {
+    body: { email: string; password: string };
+    cookie: { sessionId: { set: (options: any) => void } };
+  }): Promise<AuthResponse> {
     const user = await AuthService.login(body.email, body.password);
 
     // Create session
@@ -52,7 +72,11 @@ export const authHandlers = {
     return { user };
   },
 
-  async logout({ cookie: { sessionId } }: any) {
+  async logout({
+    cookie: { sessionId }
+  }: {
+    cookie: { sessionId: { value?: string; remove: () => void } };
+  }): Promise<{ message: string }> {
     if (sessionId?.value) {
       await SessionService.deleteSession(sessionId.value);
       sessionId.remove();
@@ -61,8 +85,13 @@ export const authHandlers = {
     return { message: "Logged out successfully" };
   },
 
-  async me({ user }: any) {
-    const { password: _pw, ...userWithoutPassword } = user;
+  async me({
+    user
+  }: {
+    user: AuthenticatedContext['user'];
+  }): Promise<AuthenticatedUser> {
+    // Create user object without password field (Prisma already excludes password)
+    const { password: _pw, ...userWithoutPassword } = user as any;
     return { user: userWithoutPassword };
   },
 };
